@@ -1,5 +1,5 @@
 import React from "react";
-import { Form, Formik, Field } from "formik";
+import { Form, Formik, Field, useField } from "formik";
 import { Box, Button, Card, CardContent, Checkbox, CheckboxProps, FormControlLabel, FormGroup, MenuItem, TextField, Typography } from "@material-ui/core";
 import { InvestmentDetails } from "./InvestmentDetails";
 
@@ -33,7 +33,10 @@ export function FormDemo() {
                             <Field name="initialinvestment" type="number"  as={TextField}
                     label="Initial Investment"/>
 
-                            <Field name="investmentRisk" value="High" type="checkbox" />
+                            <MyCheckbox name="investmentRisk" value="High" label="High - Super Riskly" />
+                            <MyCheckbox name="investmentRisk" value="Medium" label="Medium - Riskly" />
+                            <MyCheckbox name="investmentRisk" value="Low" label="Low - Safe" />
+
                             <Field name="investmentRisk" value="Medium" type="checkbox" />
                             <Field name="investmentRisk" value="Low" type="checkbox" />
 
@@ -55,8 +58,8 @@ export function FormDemo() {
                                 <MenuItem value={4}>4</MenuItem>
                                 <MenuItem value={5}>5</MenuItem>
                             </Field>
+                            <MyCheckbox name="acceptedTermsAndConditions" label="Accept terms and conditions" />
 
-                            <Field name="acceptedTermsAndConditions" type="checkbox"></Field>
                             {/* Too see current values of the form */}
                             <pre>{JSON.stringify(values, null, 4)}</pre>
                             {/* <pre>{JSON.stringify(errors, null, 4)}</pre> */}
@@ -69,3 +72,21 @@ export function FormDemo() {
     );
 }
 
+ /**
+ * Formik Field cannot take label in "as" so we must create a component using useField
+ * MyCheckbox component
+ */
+export interface MyCheckboxProps extends CheckboxProps {
+    name: string;
+    value?: string | number;
+    label?: string;
+}
+
+export function MyCheckbox(props: MyCheckboxProps) {
+    const [field] = useField({
+        name: props.name,
+        type: 'checkbox',
+        value:props.value
+    })
+    return <FormControlLabel control={<Checkbox {...props}  {...field} />} label={props.label} />;
+}
