@@ -36,8 +36,19 @@ export function FormDemo() {
                       })
                     })
                   }
-                initialValues={initialValues} onSubmit={() => {}}>
-                    {({values, errors, touched}) => (
+                initialValues={initialValues} onSubmit={(values, formikHelpers) => {
+
+                    //Why do we have return a promise
+                    return new Promise(res => {
+                        setTimeout(() => {
+                            console.log(values);
+                            console.log(formikHelpers);
+                            console.log('---------');
+                            res();
+                        }, 5000);
+                    })
+                }}>
+                    {({values, errors, isSubmitting, isValidating}) => (
                         <Form>
                            <Box marginBottom={2}>
                                 <FormGroup>
@@ -48,7 +59,7 @@ export function FormDemo() {
                             </Box>
                             <Box marginBottom={2}>
                                 <FormGroup>
-                                    <Field name="initialinvestment" type="number"  as={TextField}
+                                    <Field name="initialInvestment" type="number"  as={TextField}
                     label="Initial Investment"/>
                                 </FormGroup>
                             </Box>
@@ -100,7 +111,7 @@ export function FormDemo() {
                             {/* Too see current values of the form */}
                             <pre>{JSON.stringify(values, null, 4)}</pre>
                             <pre>{JSON.stringify(errors, null, 4)}</pre>
-
+                            <Button type="submit" disabled={isSubmitting || isValidating}>Submit</Button>
                         </Form>
                     )}
                 </Formik>
